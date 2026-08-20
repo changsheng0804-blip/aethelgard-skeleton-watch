@@ -10,8 +10,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x08090b);
 
+  // Style: elevated watch-counter viewpoint — the viewer looks slightly down through the display case at the 45° movement, never level with the plinth.
   const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 1.8, 9.8);
+  camera.position.set(0, 2.8, 10.8);
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -32,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
   controls.minDistance = 2.5;
   controls.maxDistance = 22;
   controls.maxPolarAngle = Math.PI / 2 + 0.15; // Don't go deep under floor
-  controls.target.set(0, 0, 0);
+  controls.target.set(0, -0.8, 0.2);
 
   // 3. Environment & Materials
   const studioEnvMap = Textures.createStudioEnvMap(renderer);
@@ -87,20 +88,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
     return {
       overview: {
-        pos: new THREE.Vector3(0, (1.8 + yOffset) * distScale, 9.8 * distScale),
-        target: new THREE.Vector3(0, -0.2, 0)
+        pos: new THREE.Vector3(0, (2.8 + yOffset) * distScale, 10.8 * distScale),
+        target: new THREE.Vector3(0, -0.8, 0.2)
       },
       macro: {
-        pos: new THREE.Vector3(0.4 * distScale, -0.4, 3.6 * Math.min(distScale, 1.25)),
-        target: new THREE.Vector3(0.3, -0.3, 0)
+        pos: new THREE.Vector3(0.4 * distScale, (1.0 + yOffset) * distScale, 4.4 * Math.min(distScale, 1.25)),
+        target: new THREE.Vector3(0.3, -0.8, 0.2)
       },
       crown: {
-        pos: new THREE.Vector3(4.6 * distScale, 0.4, 4.2 * distScale),
-        target: new THREE.Vector3(1.8, 0, 0)
+        pos: new THREE.Vector3(8.2 * distScale, (3.2 + yOffset) * distScale, 7.8 * distScale),
+        target: new THREE.Vector3(0, -1.3, 0.3)
       },
       caseback: {
-        pos: new THREE.Vector3(0, (1.2 + yOffset) * distScale, -9.2 * distScale),
-        target: new THREE.Vector3(0, -0.2, 0)
+        pos: new THREE.Vector3(0, (2.2 + yOffset) * distScale, -10.0 * distScale),
+        target: new THREE.Vector3(0, -0.8, 0.2)
       }
     };
   }

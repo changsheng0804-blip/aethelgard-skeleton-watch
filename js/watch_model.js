@@ -6,8 +6,12 @@
 
 const WatchModel = {
   create: function () {
+    // Style: AETHELGARD haute-horlogerie display — the watch leans back 45° from the counter, with the strap resting on a rear cradle rather than passing through a central post.
     const watchRoot = new THREE.Group();
     watchRoot.name = "WatchRoot";
+    // Rotate the assembled watch around its center, then lower it so the folded strap lands on the rear saddle.
+    watchRoot.rotation.x = -Math.PI / 4;
+    watchRoot.position.set(0, -1.5, 0.2);
 
     // Sub-groups for layer separation and exploded view
     const groups = {
@@ -614,6 +618,7 @@ const WatchModel = {
         new THREE.Vector3(0, 0.50, -3.15),
         new THREE.Vector3(0, 0.05, -3.20)
       ] : [
+        // Preserve the visible exterior loop; the red support point is a local contact patch on its lower run.
         new THREE.Vector3(0, -2.15, -0.05),
         new THREE.Vector3(0, -2.85, -0.5),
         new THREE.Vector3(0, -2.75, -1.6),
@@ -671,13 +676,14 @@ const WatchModel = {
         const loopGeo = new THREE.TorusGeometry(width * 0.55, 0.06, 12, 32);
         loopGeo.scale(1, 0.35, 1);
         const loop1 = new THREE.Mesh(loopGeo, Materials.leatherStrap);
-        loop1.position.set(0, -2.4, -2.0);
-        loop1.rotation.x = -0.6;
+                // Keeper loops follow the lower strap run and sit just before the rear closure.
+        // Green-marked keeper: its hole axis follows the lower strap tangent, so the leather passes through it.
+        loop1.position.set(0, -2.45, -1.15);
+        loop1.rotation.x = 2.20;
         strapGroup.add(loop1);
-
         const loop2 = loop1.clone();
-        loop2.position.set(0, -1.6, -2.7);
-        loop2.rotation.x = -0.9;
+        loop2.position.set(0, -1.55, -2.35);
+        loop2.rotation.x = 2.00;
         strapGroup.add(loop2);
       }
 
@@ -685,7 +691,9 @@ const WatchModel = {
       if (!isTop) {
         const claspGeo = new THREE.BoxGeometry(width * 0.75, 0.45, 0.16);
         const claspMesh = new THREE.Mesh(claspGeo, Materials.polishedSteel);
+        // The deployment clasp bridges the two strap halves at their common rear endpoint.
         claspMesh.position.set(0, 0, -3.28);
+        claspMesh.rotation.x = -Math.PI / 2;
         strapGroup.add(claspMesh);
 
         const claspLogo = new THREE.Mesh(
@@ -693,7 +701,7 @@ const WatchModel = {
           Materials.roseGold
         );
         claspLogo.rotateX(Math.PI / 2);
-        claspLogo.position.set(0, 0, -3.36);
+        claspLogo.position.set(0, 0, -3.40);
         strapGroup.add(claspLogo);
       }
 
@@ -757,39 +765,32 @@ const WatchModel = {
     ledRing.position.y = -3.8;
     podiumGroup.add(ledRing);
 
-    // 4. Luxury Watch Display Stand / Bottom Saddle Cradle (Sleek, Non-Intersecting Architectural Mount)
-    // Polished vertical support post rising from the base platter
-    const stemGeo = new THREE.CylinderGeometry(0.16, 0.20, 1.2, 24);
+    // 4. Luxury Watch Display Stand / Rear Strap Cradle
+    // Keep the post behind the folded strap/clasp; it must never rise through the watch body.
+    const stemGeo = new THREE.CylinderGeometry(0.16, 0.20, 0.58, 24);
     const stemMesh = new THREE.Mesh(stemGeo, Materials.polishedSteel);
-    stemMesh.position.set(0, -3.4, -0.5);
+    // The old central stem caused the exact side-view collision this display is meant to avoid.
+    // Keep a short rear neck only as a visual connection; the actual load is carried by the saddle.
+    // Blue-marked seat: place it directly below the red-marked lowest strap segment after root rotation.
+    stemMesh.position.set(0, -3.86, -2.03);
+    stemMesh.scale.y = 0.35;
     stemMesh.castShadow = true;
     podiumGroup.add(stemMesh);
 
     // Sleek curved support saddle cradling the lower watch strap from underneath
-    const saddleShape = new THREE.Shape();
-    saddleShape.moveTo(-1.2, -0.1);
-    saddleShape.quadraticCurveTo(0, -0.3, 1.2, -0.1);
-    saddleShape.lineTo(1.1, 0.1);
-    saddleShape.quadraticCurveTo(0, -0.1, -1.1, 0.1);
-    saddleShape.closePath();
-
-    const saddleGeo = new THREE.ExtrudeGeometry(saddleShape, {
-      depth: 0.8,
-      bevelEnabled: true,
-      bevelThickness: 0.03,
-      bevelSize: 0.03,
-      bevelSegments: 2
-    });
-    saddleGeo.center();
+        // A compact blue-marked seat directly under the red strap contact patch.
+    const saddleGeo = new THREE.BoxGeometry(1.20, 0.32, 0.72);
     const saddleMesh = new THREE.Mesh(saddleGeo, Materials.polishedSteel);
-    saddleMesh.position.set(0, -2.92, -0.5);
+    // The saddle sits below and behind the lower strap run after the 45° display tilt.
+    // The leather must rest on this blue seat, not pass behind it.
+    saddleMesh.position.set(0, -3.66, -2.03);
     saddleMesh.castShadow = true;
     podiumGroup.add(saddleMesh);
 
     // Rose gold accent badge on support saddle
     const saddleAccentGeo = new THREE.BoxGeometry(0.6, 0.04, 0.7);
     const saddleAccent = new THREE.Mesh(saddleAccentGeo, Materials.roseGold);
-    saddleAccent.position.set(0, -2.96, -0.5);
+    saddleAccent.position.set(0, -3.84, -2.03);
     podiumGroup.add(saddleAccent);
 
     return podiumGroup;
