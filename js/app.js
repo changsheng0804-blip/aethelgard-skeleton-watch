@@ -77,36 +77,62 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Camera Presets
-  const cameraPresets = {
-    overview: {
-      pos: new THREE.Vector3(0, 1.8, 9.8),
-      target: new THREE.Vector3(0, 0, 0)
-    },
-    macro: {
-      pos: new THREE.Vector3(0.5, -0.4, 3.6),
-      target: new THREE.Vector3(0.4, -0.3, 0)
-    },
-    crown: {
-      pos: new THREE.Vector3(4.6, 0.4, 4.2),
-      target: new THREE.Vector3(1.8, 0, 0)
-    },
-    caseback: {
-      pos: new THREE.Vector3(0, 1.2, -9.2),
-      target: new THREE.Vector3(0, 0, 0)
+  // Responsive Camera FOV & Distance calculator for mobile vs desktop
+  function getResponsivePresets() {
+    const aspect = window.innerWidth / window.innerHeight;
+    const isPortrait = aspect < 1.0;
+    // In portrait mobile mode, pull back slightly or elevate to frame the upright watch perfectly
+    const distScale = isPortrait ? Math.pow(1.0 / aspect, 0.6) : 1.0;
+    const yOffset = isPortrait ? 0.3 : 0.0;
+
+    return {
+      overview: {
+        pos: new THREE.Vector3(0, (1.8 + yOffset) * distScale, 9.8 * distScale),
+        target: new THREE.Vector3(0, -0.2, 0)
+      },
+      macro: {
+        pos: new THREE.Vector3(0.4 * distScale, -0.4, 3.6 * Math.min(distScale, 1.25)),
+        target: new THREE.Vector3(0.3, -0.3, 0)
+      },
+      crown: {
+        pos: new THREE.Vector3(4.6 * distScale, 0.4, 4.2 * distScale),
+        target: new THREE.Vector3(1.8, 0, 0)
+      },
+      caseback: {
+        pos: new THREE.Vector3(0, (1.2 + yOffset) * distScale, -9.2 * distScale),
+        target: new THREE.Vector3(0, -0.2, 0)
+      }
+    };
+  }
+
+  function updateCameraForViewport() {
+    const aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = aspect;
+
+    // Maintain beautiful framing across ultra-wide, laptops, tablets, and tall phones
+    if (aspect < 1.0) {
+      camera.fov = Math.min(52, 38 / Math.pow(aspect, 0.45));
+    } else {
+      camera.fov = 38;
     }
-  };
+    camera.updateProjectionMatrix();
+
+    const isMobile = window.innerWidth < 768;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.75 : 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 
   function switchCameraPreset(presetName) {
-    if (!cameraPresets[presetName]) return;
+    const currentPresets = getResponsivePresets();
+    if (!currentPresets[presetName]) return;
     state.activeCameraPreset = presetName;
 
     state.cameraLerp.active = true;
     state.cameraLerp.progress = 0;
     state.cameraLerp.startPos.copy(camera.position);
-    state.cameraLerp.targetPos.copy(cameraPresets[presetName].pos);
+    state.cameraLerp.targetPos.copy(currentPresets[presetName].pos);
     state.cameraLerp.startLookAt.copy(controls.target);
-    state.cameraLerp.targetLookAt.copy(cameraPresets[presetName].target);
+    state.cameraLerp.targetLookAt.copy(currentPresets[presetName].target);
 
     // Update UI active buttons
     document.querySelectorAll('.cam-btn').forEach(btn => {
@@ -345,13 +371,39 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Window Resize
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Specs Modal Sheet Triggers (Mobile & Desktop)
+  const specsModal = document.getElementById('specs-modal');
+  const specsToggleBtn = document.getElementById('btn-specs-toggle');
+  const specsCloseBtn = document.getElementById('btn-close-specs');
+
+  if (specsToggleBtn && specsModal) {
+    specsToggleBtn.addEventListener('click', () => {
+      specsModal.classList.add('active');
+    });
+  }
+
+  if (specsCloseBtn && specsModal) {
+    specsCloseBtn.addEventListener('click', () => {
+      specsModal.classList.remove('active');
+    });
+  }
+
+  if (specsModal) {
+    specsModal.addEventListener('click', (e) => {
+      if (e.target === specsModal) {
+        specsModal.classList.remove('active');
+      }
+    });
+  }
+
+  // Window Resize & Viewport Adaptation
+  window.addEventListener('resize', updateCameraForViewport);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(updateCameraForViewport, 150);
   });
+
+  // Initial Responsive Setup
+  updateCameraForViewport();
 
   // Remove Loader when ready
   setTimeout(() => {

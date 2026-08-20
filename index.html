@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>AETHELGARD - 3D 镂空机械腕表沉浸式展示</title>
   
   <!-- Google Fonts: Luxury Typography -->
@@ -23,6 +23,43 @@
   <div id="loader">
     <div class="loader-gear"></div>
     <div class="loader-text">HAUTE HORLOGERIE • 正在装配机械机芯</div>
+  </div>
+
+  <!-- Mobile Specs Bottom Sheet / Modal -->
+  <div id="specs-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="brand-badge">CALIBRE SPECIFICATIONS</span>
+        <button id="btn-close-specs" class="modal-close">&times;</button>
+      </div>
+      <h3 class="modal-title">AETHELGARD 3700 机芯规格</h3>
+      <div class="modal-grid">
+        <div class="modal-item">
+          <span class="m-val">28,800 VPH</span>
+          <span class="m-lbl">4Hz 高频往复振频</span>
+        </div>
+        <div class="modal-item">
+          <span class="m-val">26 JEWELS</span>
+          <span class="m-lbl">人造红宝石轴承</span>
+        </div>
+        <div class="modal-item">
+          <span class="m-val">TITANIUM & GOLD</span>
+          <span class="m-lbl">钛金复合壳体</span>
+        </div>
+        <div class="modal-item">
+          <span class="m-val">SAPPHIRE 360°</span>
+          <span class="m-lbl">双面防刮全透背光</span>
+        </div>
+        <div class="modal-item">
+          <span class="m-val">21K GOLD ROTOR</span>
+          <span class="m-lbl">日内瓦纹镂空自动陀</span>
+        </div>
+        <div class="modal-item">
+          <span class="m-val">ALLIGATOR LEATHER</span>
+          <span class="m-lbl">手工双缝线深棕表带</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- WebGL 3D Canvas Container -->
@@ -62,13 +99,17 @@
 
     <!-- Top Right: Quick Action Buttons -->
     <div class="top-right-bar">
+      <!-- Specs Sheet Toggle (Mobile/Desktop) -->
+      <button id="btn-specs-toggle" class="icon-btn" title="腕表规格参数">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      </button>
       <!-- Escapement Audio Synth Toggle -->
       <button id="btn-audio" class="icon-btn" title="机械擒纵滴答声">
         <svg viewBox="0 0 24 24"><path d="M12 3v9.28a4 4 0 1 0 2 3.47V6h4V3h-6z"/></svg>
       </button>
       <!-- Auto Rotate Toggle -->
       <button id="btn-rotate" class="icon-btn active" title="自动慢速旋转展示">
-        <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       </button>
       <!-- Fullscreen Toggle -->
       <button id="btn-fullscreen" class="icon-btn" title="全屏沉浸展示">

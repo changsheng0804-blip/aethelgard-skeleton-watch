@@ -466,27 +466,252 @@ html, body {
   to { transform: rotate(360deg); }
 }
 
-/* Responsive adjustments */
+/* Specs Modal / Bottom Sheet (Mobile & Desktop) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(4, 5, 7, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: linear-gradient(135deg, rgba(16, 19, 24, 0.95), rgba(26, 30, 40, 0.85));
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px var(--gold-glow);
+  transform: translateY(20px) scale(0.96);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active .modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.modal-close:hover {
+  background: rgba(212, 175, 55, 0.3);
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--gold-bright);
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.m-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold-bright);
+}
+
+.m-lbl {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   Mobile & Tablet Responsive Adaptations
+   ========================================================= */
+
+@media (max-width: 860px) {
+  /* Hide the vertical specs rail on tablet/mobile to prevent 3D canvas overlap */
+  .specs-rail {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .ui-overlay {
-    padding: 16px;
+    padding: 16px 14px;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
+
+  /* Header compact single-column/center */
   .brand-header {
-    max-width: 100%;
-    padding: 14px 18px;
+    padding: 8px 14px;
+    border-radius: 14px;
   }
+
   .brand-title {
-    font-size: 20px;
+    font-size: 15px;
+    letter-spacing: 1.5px;
   }
+
+  .brand-badge {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  .brand-subtitle {
+    display: none; /* Keep clean on small phones */
+  }
+
+  /* Top Right bar: smaller circular touch targets */
+  .top-right-bar {
+    top: max(16px, env(safe-area-inset-top));
+    right: 14px;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .icon-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Bottom Dock layout */
+  .bottom-dock {
+    width: 100%;
+    gap: 10px;
+  }
+
+  /* Camera Navigation: Horizontally scrollable bar */
   .camera-nav {
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px;
+    justify-content: flex-start;
   }
+
+  .camera-nav::-webkit-scrollbar {
+    display: none;
+  }
+
   .cam-btn {
+    padding: 7px 14px;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Action Deck: Horizontally scrollable row of pills */
+  .action-deck {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    justify-content: flex-start;
+    padding-bottom: 2px;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .action-deck::-webkit-scrollbar {
+    display: none;
+  }
+
+  .explode-btn {
+    padding: 7px 14px;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .control-pill {
     padding: 6px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  .control-pill span {
     font-size: 10px;
   }
+
+  .btn-toggle {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .speed-slider {
+    width: 60px;
+  }
+
   .live-dial-info {
-    display: none;
+    display: none; /* Hidden on phones to clear lower-left canvas */
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-card {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .modal-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
