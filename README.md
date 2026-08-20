@@ -1,5 +1,11 @@
 # AETHELGARD - 原创 3D 镂空机械腕表沉浸式展示
 
+> 🎬 **在线 Demo (GitHub Pages)** → https://changsheng0804-blip.github.io/aethelgard-skeleton-watch/
+
+![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-success?style=flat-square&logo=github)
+![Three.js](https://img.shields.io/badge/Three.js-r128-049EF4?style=flat-square&logo=three.js)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
+
 AETHELGARD 是一枚基于 WebGL 与 Three.js 原生程序化建模构建的高级 3D 镂空机械腕表数字孪生展品。具备电影级奢华布光、真实物理材质、精准多级齿轮啮合动力学以及高频往复谐振游丝摆轮系统。
 
 ---
@@ -44,5 +50,54 @@ AETHELGARD 是一枚基于 WebGL 与 Three.js 原生程序化建模构建的高�
 
 ## 🚀 运行方式
 
+### 在线访问（推荐）
+直接打开 GitHub Pages 部署的静态页面，无需本地环境：
+**https://changsheng0804-blip.github.io/aethelgard-skeleton-watch/**
+
+### 本地运行
 无需安装任何后端或依赖，直接在浏览器中打开 `index.html` 即可：
 - 双击 `index.html`，或使用 VS Code Live Server、Python/Node 静态服务器访问。
+```bash
+# Python 静态服务器示例
+python -m http.server 8000
+# 然后访问 http://localhost:8000
+```
+
+---
+
+## 🌐 GitHub Pages 部署说明
+
+本项目为纯静态站点（`index.html` + `css/` + `js/`），已配置 GitHub Pages 自动部署：
+
+- **部署分支**: `main` / 根目录 `/`
+- **静态资源**: 已添加 `.nojekyll` 避免 Jekyll 处理，确保 Three.js 等资源正常加载
+- **自动构建**: 每次推送到 `main` 分支，GitHub Pages 会自动重新构建
+- **访问地址**: https://changsheng0804-blip.github.io/aethelgard-skeleton-watch/
+- **仓库地址**: https://github.com/changsheng0804-blip/aethelgard-skeleton-watch
+
+### 重新部署
+```bash
+git add .
+git commit -m "update: ..."
+git push origin main
+```
+
+---
+
+## 📁 项目结构
+
+```
+.
+├── index.html          # 主页面 - 沉浸式 UI + Canvas 容器
+├── css/style.css       # 奢华深色主题样式
+├── js/
+│   ├── app.js          # 主应用逻辑、相机预设、交互控制
+│   ├── watch_model.js  # 程序化腕表建模（表壳/表盘/指针等）
+│   ├── gear_physics.js # 齿轮啮合物理与传动比计算
+│   ├── materials.js    # PBR 材质系统（金/钛/皮革/蓝宝石）
+│   ├── lighting.js     # 影棚三点布光预设
+│   ├── textures.js     # 程序化纹理生成
+│   └── audio_synth.js  # Web Audio 擒纵滴答合成
+├── README.md           # 本说明文档
+└── .nojekyll           # 禁用 Jekyll 处理
+```
