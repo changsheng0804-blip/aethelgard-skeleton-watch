@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHELGARD - 3D 镂空机械腕表沉浸式展示</title>
+  
+  <!-- Google Fonts: Luxury Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Three.js and OrbitControls via reliable CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+  <!-- Loading Animation Overlay -->
+  <div id="loader">
+    <div class="loader-gear"></div>
+    <div class="loader-text">HAUTE HORLOGERIE • 正在装配机械机芯</div>
+  </div>
+
+  <!-- WebGL 3D Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- Luxury UI Overlay -->
+  <div class="ui-overlay">
+    
+    <!-- Top Left: Sleek Minimalist Brand Header -->
+    <header class="brand-header">
+      <div class="brand-header-top">
+        <span class="brand-badge">Haute Horlogerie</span>
+        <h1 class="brand-title">AETHELGARD SKELETON</h1>
+      </div>
+      <p class="brand-subtitle">双曲面全透蓝宝石 / 4Hz 高频谐振摆轮 / 开放式 3D 动力轮系</p>
+    </header>
+
+    <!-- Left Floating Vertical Specs Rail -->
+    <aside class="specs-rail">
+      <div class="spec-card">
+        <span class="spec-val">28,800 VPH</span>
+        <span class="spec-lbl">4Hz 振频</span>
+      </div>
+      <div class="spec-card">
+        <span class="spec-val">26 JEWELS</span>
+        <span class="spec-lbl">红宝石轴承</span>
+      </div>
+      <div class="spec-card">
+        <span class="spec-val">TITANIUM & GOLD</span>
+        <span class="spec-lbl">钛金复合壳体</span>
+      </div>
+      <div class="spec-card">
+        <span class="spec-val">SAPPHIRE 360°</span>
+        <span class="spec-lbl">双面全透背光</span>
+      </div>
+    </aside>
+
+    <!-- Top Right: Quick Action Buttons -->
+    <div class="top-right-bar">
+      <!-- Escapement Audio Synth Toggle -->
+      <button id="btn-audio" class="icon-btn" title="机械擒纵滴答声">
+        <svg viewBox="0 0 24 24"><path d="M12 3v9.28a4 4 0 1 0 2 3.47V6h4V3h-6z"/></svg>
+      </button>
+      <!-- Auto Rotate Toggle -->
+      <button id="btn-rotate" class="icon-btn active" title="自动慢速旋转展示">
+        <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+      </button>
+      <!-- Fullscreen Toggle -->
+      <button id="btn-fullscreen" class="icon-btn" title="全屏沉浸展示">
+        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+      </button>
+    </div>
+
+    <!-- Bottom Left: Live Sweeping Chronometer Indicator -->
+    <div class="live-dial-info">
+      <div class="live-time" id="live-time-val">10:10:30</div>
+      <div class="live-status">
+        <div class="pulse-dot"></div>
+        <span>CHRONOMETER CALIBRE ACTIVE</span>
+      </div>
+    </div>
+
+    <!-- Bottom Center: Control Dock (Camera angles, Exploded view, speed, theme) -->
+    <div class="bottom-dock">
+      
+      <!-- Camera Angle Switcher -->
+      <nav class="camera-nav">
+        <button class="cam-btn active" data-cam="overview">
+          <span>🏛️ 全景展示</span>
+        </button>
+        <button class="cam-btn" data-cam="macro">
+          <span>🔍 镂空微距</span>
+        </button>
+        <button class="cam-btn" data-cam="crown">
+          <span>✨ 侧影表冠</span>
+        </button>
+        <button class="cam-btn" data-cam="caseback">
+          <span>⚙️ 机械背透</span>
+        </button>
+      </nav>
+
+      <!-- Action & Configuration Deck -->
+      <div class="action-deck">
+        
+        <!-- Exploded View Trigger -->
+        <button id="btn-explode" class="explode-btn">
+          <span>💥 爆炸分解</span>
+        </button>
+
+        <!-- Speed Slider Control -->
+        <div class="control-pill">
+          <span>转速</span>
+          <div class="speed-slider-wrap">
+            <input type="range" id="speed-slider" class="speed-slider" min="0.1" max="3.0" step="0.05" value="1.0">
+            <span id="speed-val-label" style="font-size:11px; font-weight:600; color:var(--gold-bright);">1.00x</span>
+          </div>
+        </div>
+
+        <!-- Material Themes -->
+        <div class="control-pill">
+          <span>材质主题</span>
+          <button class="btn-toggle theme-btn active" data-theme="classic">黑金</button>
+          <button class="btn-toggle theme-btn" data-theme="platinum">白金</button>
+          <button class="btn-toggle theme-btn" data-theme="stealth">黑曜</button>
+        </div>
+
+        <!-- Lighting Presets -->
+        <div class="control-pill">
+          <span>影棚布光</span>
+          <button class="btn-toggle light-btn active" data-light="glamour">奢华</button>
+          <button class="btn-toggle light-btn" data-light="noir">暗夜</button>
+          <button class="btn-toggle light-btn" data-light="warmGold">暖金</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Application Logic Modules -->
+  <script src="js/textures.js"></script>
+  <script src="js/materials.js"></script>
+  <script src="js/gear_physics.js"></script>
+  <script src="js/watch_model.js"></script>
+  <script src="js/lighting.js"></script>
+  <script src="js/audio_synth.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

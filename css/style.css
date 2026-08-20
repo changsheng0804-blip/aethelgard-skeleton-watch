@@ -1,0 +1,492 @@
+:root {
+  --bg-color: #08090b;
+  --panel-bg: rgba(16, 18, 22, 0.78);
+  --panel-border: rgba(212, 175, 55, 0.28);
+  --gold-primary: #d4af37;
+  --gold-bright: #f5d77f;
+  --gold-glow: rgba(212, 175, 55, 0.45);
+  --rose-gold: #b76e79;
+  --text-main: #f0f2f5;
+  --text-muted: #8e95a5;
+  --accent-cyan: #5cd0e6;
+  --font-serif: "Cinzel", "Playfair Display", "Times New Roman", serif;
+  --font-sans: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  font-family: var(--font-sans);
+  color: var(--text-main);
+}
+
+#canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Luxury UI Overlay */
+.ui-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
+}
+
+/* Top Brand Header - Minimalist & Sleek */
+.brand-header {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(14, 16, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
+  padding: 10px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  width: fit-content;
+}
+
+.brand-header-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-badge {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-glow);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.brand-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #ffffff 30%, var(--gold-bright) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* Left Floating Vertical Specs Rail */
+.specs-rail {
+  position: absolute;
+  top: 50%;
+  left: 30px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+  animation: fadeInLeft 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spec-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid var(--gold-primary);
+  border-radius: 8px;
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.spec-card:hover {
+  transform: translateX(4px);
+  border-left-color: var(--gold-bright);
+  border-color: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 8px 24px var(--gold-glow);
+}
+
+.spec-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold-bright);
+  letter-spacing: 0.5px;
+}
+
+.spec-lbl {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 1px;
+}
+
+/* Quick Floating Controls (Top Right) */
+.top-right-bar {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  display: flex;
+  gap: 12px;
+  pointer-events: auto;
+  animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.icon-btn:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-bright);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px var(--gold-glow);
+}
+
+.icon-btn.active {
+  background: linear-gradient(135deg, var(--gold-primary), #997c21);
+  color: #000;
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 16px var(--gold-glow);
+}
+
+/* Bottom Control Deck */
+.bottom-dock {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Camera Angle Switcher */
+.camera-nav {
+  display: flex;
+  gap: 8px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--panel-border);
+  padding: 6px;
+  border-radius: 30px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+.cam-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cam-btn:hover {
+  color: var(--text-main);
+}
+
+.cam-btn.active {
+  background: linear-gradient(135deg, var(--gold-primary), #997c21);
+  color: #0b0c0e;
+  font-weight: 600;
+  box-shadow: 0 4px 14px var(--gold-glow);
+}
+
+/* Interactive Action Buttons & Toggles */
+.action-deck {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.control-pill {
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.control-pill span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.btn-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-toggle:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold-primary);
+  color: var(--gold-bright);
+}
+
+.btn-toggle.active {
+  background: var(--gold-primary);
+  color: #0b0c0e;
+  font-weight: bold;
+  border-color: var(--gold-bright);
+}
+
+/* Speed Slider */
+.speed-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.speed-slider {
+  -webkit-appearance: none;
+  width: 80px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+.speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+
+/* Exploded View Slider Modal or Pill */
+.explode-btn {
+  background: linear-gradient(135deg, rgba(183, 110, 121, 0.35), rgba(212, 175, 55, 0.25));
+  border: 1px solid var(--rose-gold);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.explode-btn:hover {
+  background: linear-gradient(135deg, var(--rose-gold), var(--gold-primary));
+  color: #000;
+  box-shadow: 0 0 18px rgba(183, 110, 121, 0.6);
+}
+
+.explode-btn.active {
+  background: linear-gradient(135deg, var(--rose-gold), var(--gold-primary));
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+
+/* Live Time Indicator (Bottom Left) */
+.live-dial-info {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 20px;
+  border-radius: 10px;
+  pointer-events: auto;
+  animation: fadeInLeft 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.live-time {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--gold-bright);
+  letter-spacing: 1px;
+}
+
+.live-status {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #2ed573;
+  box-shadow: 0 0 8px #2ed573;
+  animation: pulse 1.5s infinite;
+}
+
+/* Keyframe animations */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.6; }
+}
+
+/* Loading Overlay */
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #08090b;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+.loader-gear {
+  width: 60px;
+  height: 60px;
+  border: 3px dashed var(--gold-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spinGear 2s linear infinite;
+}
+
+.loader-text {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  letter-spacing: 4px;
+  color: var(--gold-bright);
+  text-transform: uppercase;
+}
+
+@keyframes spinGear {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ui-overlay {
+    padding: 16px;
+  }
+  .brand-header {
+    max-width: 100%;
+    padding: 14px 18px;
+  }
+  .brand-title {
+    font-size: 20px;
+  }
+  .camera-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cam-btn {
+    padding: 6px 12px;
+    font-size: 10px;
+  }
+  .live-dial-info {
+    display: none;
+  }
+}
